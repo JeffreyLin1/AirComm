@@ -1,13 +1,14 @@
-// 1. Install dependencies DONE
-// 2. Import dependencies DONE
-// 3. Setup webcam and canvas DONE
-// 4. Define references to those DONE
-// 5. Load handpose DONE
-// 6. Detect function DONE
-// 7. Drawing utilities DONE
-// 8. Draw functions DONE
+// 0. Install fingerpose npm install fingerpose
+// 1. Add Use State
+// 2. Import emojis and finger pose import * as fp from "fingerpose";
+// 3. Setup hook and emoji object
+// 4. Update detect function for gesture handling
+// 5. Add emoji display to the screen
 
-import React, { useRef } from "react";
+///////// NEW STUFF ADDED USE STATE
+import React, { useRef, useState, useEffect } from "react";
+///////// NEW STUFF ADDED USE STATE
+
 // import logo from './logo.svg';
 import * as tf from "@tensorflow/tfjs";
 import * as handpose from "@tensorflow-models/handpose";
@@ -15,9 +16,20 @@ import Webcam from "react-webcam";
 import "./App.css";
 import { drawHand } from "./utilities";
 
+///////// NEW STUFF IMPORTS
+import * as fp from "fingerpose";
+import victory from "./victory.png";
+import thumbs_up from "./thumbs_up.png";
+///////// NEW STUFF IMPORTS
+
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+
+  ///////// NEW STUFF ADDED STATE HOOK
+  const [emoji, setEmoji] = useState(null);
+  const images = { thumbs_up:thumbs_up, victory:victory };
+  ///////// NEW STUFF ADDED STATE HOOK
 
   const runHandpose = async () => {
     const net = await handpose.load();
@@ -25,7 +37,7 @@ function App() {
     //  Loop and detect hands
     setInterval(() => {
       detect(net);
-    }, 100);
+    }, 10);
   };
 
   const detect = async (net) => {
@@ -50,7 +62,35 @@ function App() {
 
       // Make Detections
       const hand = await net.estimateHands(video);
-      console.log(hand);
+      // console.log(hand);
+
+      ///////// NEW STUFF ADDED GESTURE HANDLING
+
+      if (hand.length > 0) {
+        const GE = new fp.GestureEstimator([
+          fp.Gestures.VictoryGesture,
+          fp.Gestures.ThumbsUpGesture,
+        ]);
+        const gesture = await GE.estimate(hand[0].landmarks, 8);
+        //console.log(gesture);
+
+        if (gesture.gestures !== undefined && gesture.gestures.length > 0) {
+          console.log(gesture.gestures);
+
+         /* const confidence = gesture.gestures.map(
+            (prediction) => prediction.confidence
+          );
+          const maxConfidence = confidence.indexOf(
+            Math.max.apply(null, confidence)
+          );
+          */
+          setEmoji(gesture.gestures);
+          
+          console.log(emoji);
+        }
+      }
+
+      ///////// NEW STUFF ADDED GESTURE HANDLING
 
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
@@ -58,7 +98,7 @@ function App() {
     }
   };
 
-  runHandpose();
+  useEffect(()=>{runHandpose()},[]);
 
   return (
     <div className="App">
@@ -92,6 +132,26 @@ function App() {
             height: 480,
           }}
         />
+        {/* NEW STUFF */}
+        {emoji !== null ? (
+          <img
+            src={images[emoji]}
+            style={{
+              position: "absolute",
+              marginLeft: "auto",
+              marginRight: "auto",
+              left: 400,
+              bottom: 500,
+              right: 0,
+              textAlign: "center",
+              height: 100,
+            }}
+          />
+        ) : (
+          ""
+        )}
+
+        {/* NEW STUFF */}
       </header>
     </div>
   );

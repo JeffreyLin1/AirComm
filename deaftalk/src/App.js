@@ -75,20 +75,21 @@ function App() {
         //console.log(gesture);
 
         if (gesture.gestures !== undefined && gesture.gestures.length > 0) {
-          console.log(gesture.gestures);
+          //console.log(gesture.gestures);
 
-         /* const confidence = gesture.gestures.map(
-            (prediction) => prediction.confidence
+
+          const confidence = gesture.gestures.map(
+            (prediction) => prediction.score
           );
           const maxConfidence = confidence.indexOf(
             Math.max.apply(null, confidence)
           );
-          */
-          setEmoji(gesture.gestures);
           
-          console.log(emoji);
+          setEmoji(gesture.gestures[maxConfidence].name);
+          
         }
       }
+      
 
       ///////// NEW STUFF ADDED GESTURE HANDLING
 

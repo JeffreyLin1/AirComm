@@ -15,6 +15,7 @@ import * as handpose from "@tensorflow-models/handpose";
 import Webcam from "react-webcam";
 import "./App.css";
 import { drawHand } from "./utilities";
+import { loveYouGesture } from "./LoveYou";
 
 ///////// NEW STUFF IMPORTS
 import * as fp from "fingerpose";
@@ -70,12 +71,13 @@ function App() {
         const GE = new fp.GestureEstimator([
           fp.Gestures.VictoryGesture,
           fp.Gestures.ThumbsUpGesture,
+          loveYouGesture
         ]);
         const gesture = await GE.estimate(hand[0].landmarks, 8);
         //console.log(gesture);
 
         if (gesture.gestures !== undefined && gesture.gestures.length > 0) {
-          //console.log(gesture.gestures);
+          console.log(gesture.gestures);
 
 
           const confidence = gesture.gestures.map(

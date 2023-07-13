@@ -14,8 +14,8 @@ import * as tf from "@tensorflow/tfjs";
 import * as handpose from "@tensorflow-models/handpose";
 import Webcam from "react-webcam";
 import "./App.css";
-import { drawHand } from "./utilities";
-import { zero, one, two, three } from "./Nums";
+import { drawHand } from "./utilities"; 
+import { a, b} from "./signs";
 
 ///////// NEW STUFF IMPORTS
 import * as fp from "fingerpose";
@@ -23,12 +23,14 @@ import victory from "./victory.png";
 import thumbs_up from "./thumbs_up.png";
 ///////// NEW STUFF IMPORTS
 
+
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
+
   ///////// NEW STUFF ADDED STATE HOOK
-  const [emoji, setEmoji] = useState(null);
+  const [sign, setSign] = useState(null);
   const images = { thumbs_up:thumbs_up, victory:victory };
   ///////// NEW STUFF ADDED STATE HOOK
 
@@ -69,18 +71,14 @@ function App() {
 
       if (hand.length > 0) {
         const GE = new fp.GestureEstimator([
-          zero,
-          one,
-          two,
-          three
+          a, b
         ]);
 
         const gesture = await GE.estimate(hand[0].landmarks, 8);
         //console.log(gesture);
 
         if (gesture.gestures !== undefined && gesture.gestures.length > 0) {
-          console.log(gesture.gestures);
-
+          //console.log(gesture.gestures);
 
           const confidence = gesture.gestures.map(
             (prediction) => prediction.score
@@ -89,14 +87,17 @@ function App() {
             Math.max.apply(null, confidence)
           );
           
-          setEmoji(gesture.gestures[maxConfidence].name);
           
+          setSign(gesture.gestures[maxConfidence].name);
+          
+          console.log(gesture.gestures[maxConfidence].name);
+         
         }
+        
       }
-      
 
       ///////// NEW STUFF ADDED GESTURE HANDLING
-
+      //console.log(sign);
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
       drawHand(hand, ctx);
@@ -106,6 +107,7 @@ function App() {
   useEffect(()=>{runHandpose()},[]);
 
   return (
+
     <div className="App">
       <header className="App-header">
         <Webcam
@@ -137,26 +139,10 @@ function App() {
             height: 480,
           }}
         />
-        {/* NEW STUFF */}
-        {emoji !== null ? (
-          <img
-            src={images[emoji]}
-            style={{
-              position: "absolute",
-              marginLeft: "auto",
-              marginRight: "auto",
-              left: 400,
-              bottom: 500,
-              right: 0,
-              textAlign: "center",
-              height: 100,
-            }}
-          />
-        ) : (
-          ""
-        )}
+          <div className ="bottomText">
+            {sign}
+          </div>
 
-        {/* NEW STUFF */}
       </header>
     </div>
   );

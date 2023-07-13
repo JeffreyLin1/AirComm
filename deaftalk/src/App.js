@@ -30,18 +30,19 @@ function App() {
 
 
   ///////// NEW STUFF ADDED STATE HOOK
-  const [sign, setSign] = useState(null);
-  const images = { thumbs_up:thumbs_up, victory:victory };
+  const [sentence, setSentence] = useState("");
+  const translationTextRef = useRef(null);
   ///////// NEW STUFF ADDED STATE HOOK
 
   const runHandpose = async () => {
     const net = await handpose.load();
     console.log("Handpose model loaded.");
     //  Loop and detect hands
-    setInterval(() => {
+    const interval = setInterval(() => {
       detect(net);
-    }, 10);
+    }, 1000);
   };
+
 
   const detect = async (net) => {
     // Check data is available
@@ -75,6 +76,7 @@ function App() {
         ]);
 
         const gesture = await GE.estimate(hand[0].landmarks, 8);
+      
         //console.log(gesture);
 
         if (gesture.gestures !== undefined && gesture.gestures.length > 0) {
@@ -86,28 +88,39 @@ function App() {
           const maxConfidence = confidence.indexOf(
             Math.max.apply(null, confidence)
           );
-          
-          
-          setSign(gesture.gestures[maxConfidence].name);
-          
+
+       
           console.log(gesture.gestures[maxConfidence].name);
          
+          setSentence(prevSentence => prevSentence + (gesture.gestures[maxConfidence].name));  
+          
+
         }
         
       }
 
+      
       ///////// NEW STUFF ADDED GESTURE HANDLING
       //console.log(sign);
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
       drawHand(hand, ctx);
     }
+
   };
 
   useEffect(()=>{runHandpose()},[]);
 
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(sentence);
+  };
+  const handleResetClick = () => {
+    setSentence("");
+  };
+
   return (
 
+    
     <div className="App">
       <header className="App-header">
         <Webcam
@@ -139,10 +152,18 @@ function App() {
             height: 480,
           }}
         />
-          <div className ="bottomText">
-            {sign}
+         <div className="container">
+      <div className="translationBox">
+        <div className="translationContent">
+          <h2 className="translationHeading">Translation</h2>
+          <div className="translationText" id="translationText">{sentence}</div>
+          <div className="buttonContainer">
+            <button className="copyButton" onClick={handleCopyClick}>Copy</button>
+            <button className="resetButton" onClick={handleResetClick}>Reset</button>
           </div>
-
+        </div>
+      </div>
+    </div>
       </header>
     </div>
   );

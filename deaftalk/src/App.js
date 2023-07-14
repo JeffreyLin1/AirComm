@@ -15,7 +15,7 @@ import * as handpose from "@tensorflow-models/handpose";
 import Webcam from "react-webcam";
 import "./App.css";
 import { drawHand } from "./utilities"; 
-import { a, b} from "./signs";
+import { a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z } from "./signs";
 
 ///////// NEW STUFF IMPORTS
 import * as fp from "fingerpose";
@@ -72,7 +72,7 @@ function App() {
 
       if (hand.length > 0) {
         const GE = new fp.GestureEstimator([
-          a, b
+          a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
         ]);
 
         const gesture = await GE.estimate(hand[0].landmarks, 8);

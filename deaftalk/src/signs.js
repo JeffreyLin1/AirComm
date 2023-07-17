@@ -26,11 +26,42 @@ for(let finger of [Finger.Index, Finger.Middle, Finger.Ring, Finger.Pinky]){
 
 export const c = new GestureDescription('c');
 
+for(let finger of [Finger.Index, Finger.Middle, Finger.Ring, Finger.Pinky]){
+    c.addCurl(finger, FingerCurl.HalfCurl, 1);
+}
+c.addCurl(Finger.Thumb, FingerCurl.NoCurl, 1);
+
 export const d = new GestureDescription('d');
+
+for(let finger of [Finger.Middle, Finger.Ring, Finger.Pinky]){
+    d.addCurl(finger,FingerCurl.FullCurl, 1);
+}
+
+d.addCurl(Finger.Index, FingerCurl.NoCurl, 1);
+d.addDirection(Finger.Thumb, FingerDirection.VerticalUp, 1);
+
+d.addCurl(Finger.Thumb, FingerCurl.HalfCurl, 1);
+
 
 export const e = new GestureDescription('e');
 
+for(let finger of [Finger.Index, Finger.Middle, Finger.Ring, Finger.Pinky]){
+    e.addCurl(finger, FingerCurl.FullCurl, 1);
+}
+
+e.addCurl(Finger.Thumb, FingerCurl.HalfCurl, 1);
+
 export const f = new GestureDescription('f');
+
+for(let finger in [Finger.Pinky, Finger.Middle, Finger.Ring]){
+    f.addCurl(finger, Finger.NoCurl, 1);
+    f.addDirection(finger, Finger.VerticalUp, 1);
+}
+
+d.addCurl(Finger.Index, Finger.FullCurl, 1);
+
+d.addCurl(Finger.Thumb, Finger.HalfCurl, 1);
+
 
 export const g = new GestureDescription('g');
 

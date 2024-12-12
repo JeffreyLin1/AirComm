@@ -5,9 +5,9 @@
 // 4. Update detect function for gesture handling
 // 5. Add emoji display to the screen
 
-///////// NEW STUFF ADDED USE STATE
+
 import React, { useRef, useState, useEffect } from "react";
-///////// NEW STUFF ADDED USE STATE
+
 
 // import logo from './logo.svg';
 import * as tf from "@tensorflow/tfjs";
@@ -17,11 +17,10 @@ import "./App.css";
 import { drawHand } from "./utilities"; 
 import { a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z } from "./signs";
 
-///////// NEW STUFF IMPORTS
+
 import * as fp from "fingerpose";
-import victory from "./victory.png";
-import thumbs_up from "./thumbs_up.png";
-///////// NEW STUFF IMPORTS
+
+
 
 
 function App() {
@@ -29,10 +28,10 @@ function App() {
   const canvasRef = useRef(null);
 
 
-  ///////// NEW STUFF ADDED STATE HOOK
+
   const [sentence, setSentence] = useState("");
   const translationTextRef = useRef(null);
-  ///////// NEW STUFF ADDED STATE HOOK
+
 
   const runHandpose = async () => {
     const net = await handpose.load();
